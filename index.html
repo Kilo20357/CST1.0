@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>学生工具系统</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      display: flex;
+      height: calc(100vh - 64px);
+    }
+
+    .sidebar {
+      width: 240px;
+      background: #fff;
+      padding: 20px 16px;
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .sidebar h3 {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar button {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #eef2ff;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar button:hover {
+      background: #e0e7ff;
+      transform: translateX(4px);
+    }
+
+    .content {
+      flex: 1;
+      padding: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+
+    .primary-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .primary-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+<header>🎒 学生工具系统</header>
+
+<div class="container">
+  <div class="sidebar">
+    <h3>工具列表</h3>
+    <button onclick="show('home')">🏠 系统首页</button>
+    <button onclick="show('course')">⏰ 课程倒计时</button>
+  </div>
+
+  <div class="content">
+    <div id="home" class="card">
+      <h2>欢迎 👋</h2>
+      <p>这是一个面向大学生的学习辅助工具系统。</p>
+      <p>你可以在左侧选择不同的小工具，后续还可以不断扩展。</p>
+    </div>
+
+    <div id="course" class="card" style="display:none">
+      <h2>课程倒计时</h2>
+      <input id="name" placeholder="课程名称，例如：高等数学" />
+      <input id="time" type="datetime-local" />
+      <button class="primary-btn" onclick="calc()">查看剩余时间</button>
+      <div id="result" class="result"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+function calc() {
+  const name = document.getElementById('name').value;
+  const time = document.getElementById('time').value;
+  const result = document.getElementById('result');
+
+  if (!name || !time) {
+    result.innerText = '请填写完整信息';
+    return;
+  }
+
+  const diff = new Date(time) - new Date();
+
+  if (diff <= 0) {
+    result.innerText = `【${name}】已经开始或结束`; 
+    return;
+  }
+
+  const min = Math.floor(diff / 60000);
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+
+  result.innerText = `距离【${name}】还有 ${h} 小时 ${m} 分钟`;
+}
+</script>
+</body>
+</html>
